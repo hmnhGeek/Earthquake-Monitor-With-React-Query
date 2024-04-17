@@ -4,6 +4,7 @@ import "./globals.css";
 import 'semantic-ui-css/semantic.min.css';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 import { ReduxProvider } from "@/redux/ReduxProvider";
+import { Container } from "semantic-ui-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}><ReduxProvider>{children}</ReduxProvider></body>
+      <body className={inter.className}>
+        <ReduxProvider>
+          <Container>
+            {children}
+          </Container>
+        </ReduxProvider>
+      </body>
     </html>
   );
 }

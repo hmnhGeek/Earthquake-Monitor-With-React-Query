@@ -25,6 +25,7 @@ import {
 import { GridColumn, Grid, GridRow } from 'semantic-ui-react'
 import SemanticDatepicker from "react-semantic-ui-datepickers";
 import { getYYYMMDD } from "./utils/utils";
+import Link from "next/link";
 
 interface HomeProps {
   earthquakeData: any;
@@ -108,7 +109,7 @@ const Home: React.FC<HomeProps> = props => {
             <TableBody>
               {earthquakeData?.features?.map((item: any) => (
                 <TableRow>
-                  <TableCell>{item.properties.place}</TableCell>
+                  <TableCell><Link href={`/EarthquakeDetails/${item.id}`}>{item.properties.place}</Link></TableCell>
                   <TableCell>
                     {item.properties.mag?.toFixed(2)}
                   </TableCell>

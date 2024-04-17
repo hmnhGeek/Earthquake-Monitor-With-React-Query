@@ -1,6 +1,6 @@
 'use client';
 
-import { RootState } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import { connect } from "react-redux";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,27 +13,37 @@ import {
     TableBody,
     Table,
   } from 'semantic-ui-react';
+import { fetchEqDetailsByEventId } from "@/redux/actions/detailsPageActions";
 
 interface EarthquakeDetailsProps {
     earthquakeData: any;
+    earthquakeDetailsData: any;
+    fetchEqDetailsByEventId: (eventId: string) => void;
 }
 
 const EarthquakeDetails: React.FC<EarthquakeDetailsProps> = (props) => {
     const id = useParams()?.id;
-    const {earthquakeData} = props;
+    const {earthquakeData, earthquakeDetailsData, fetchEqDetailsByEventId} = props;
     const [earthquakeDetails, setEarthquakeDetails] = useState<any>(null);
 
     useEffect(() => {
-        let extractedData = earthquakeData?.features?.filter((x: any) => x.id === id)?.[0];
-        console.log(extractedData);
-        if(extractedData) {
-            setEarthquakeDetails(extractedData);
+        if(!earthquakeData && typeof id === "string" && id.trim() !== "") {
+            fetchEqDetailsByEventId(id);
         }
         else {
-            setEarthquakeDetails(null);
+            let extractedData = earthquakeData?.features?.filter((x: any) => x.id === id)?.[0];
+            if(extractedData) {
+                setEarthquakeDetails(extractedData);
+            }
+            else {
+                setEarthquakeDetails(null);
+            }
         }
-    }, [id]);
+    }, [earthquakeData, id]);
 
+    useEffect(() => {
+        if(earthquakeDetailsData && !earthquakeData) setEarthquakeDetails(earthquakeDetailsData);
+    }, [earthquakeData, earthquakeDetailsData])
 
     if(earthquakeDetails) {
         return <div style={{marginTop: "25px"}}>
@@ -81,7 +91,7 @@ const EarthquakeDetails: React.FC<EarthquakeDetailsProps> = (props) => {
                             Horizontal distance from the epicenter to the nearest station (in degrees)
                         </TableCell>
                         <TableCell>
-                            {earthquakeDetails?.properties?.dmin.toFixed(2)}
+                            {earthquakeDetails?.properties?.dmin?.toFixed(2)}
                         </TableCell>
                     </TableRow>
                     <TableRow>
@@ -126,7 +136,14 @@ const EarthquakeDetails: React.FC<EarthquakeDetailsProps> = (props) => {
 const mapStateToProps = (state: RootState) => {
     return {
         earthquakeData: state.landingPage.earthquakeData,
+        earthquakeDetailsData: state.detailsPage.earthquakeDetailsData,
     };
 };
 
-export default connect(mapStateToProps, null)(EarthquakeDetails);
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        fetchEqDetailsByEventId: (eventId: string) => dispatch(fetchEqDetailsByEventId(eventId)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EarthquakeDetails);

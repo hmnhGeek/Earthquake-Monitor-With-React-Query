@@ -88,6 +88,14 @@ const EarthquakeDetails: React.FC<EarthquakeDetailsProps> = (props) => {
                     </TableRow>
                     <TableRow>
                         <TableCell>
+                            Method or algorithm used to calculate the preferred magnitude for the event
+                        </TableCell>
+                        <TableCell>
+                            {earthquakeDetails?.properties?.magType}
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>
                             Horizontal distance from the epicenter to the nearest station (in degrees)
                         </TableCell>
                         <TableCell>
@@ -124,6 +132,22 @@ const EarthquakeDetails: React.FC<EarthquakeDetailsProps> = (props) => {
                         </TableCell>
                         <TableCell>
                             {earthquakeDetails?.properties?.place}
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>
+                            Total number of seismic stations used to determine earthquake location
+                        </TableCell>
+                        <TableCell>
+                            {earthquakeDetails?.properties?.nst}
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>
+                            Interactive Map
+                        </TableCell>
+                        <TableCell>
+                            <a href={`${earthquakeDetails?.properties?.url}/map`} target="_blank">Map</a>
                         </TableCell>
                     </TableRow>
                 </TableBody>

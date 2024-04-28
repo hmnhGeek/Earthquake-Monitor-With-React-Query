@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import axios from "axios";
-import { Loader, Container, Header, Button, Icon } from "semantic-ui-react";
+import { Loader, Container, Header, Button, Icon, Dimmer } from "semantic-ui-react";
 import {
   TableRow,
   TableHeaderCell,
@@ -58,7 +58,7 @@ const Home: React.FC = props => {
     }
   }
 
-  if(isLoading) return <Loader inverted content="loading" inline="centered" />;
+  if(isLoading) return <Dimmer active inverted><Loader inverted content="loading" inline="centered" /></Dimmer>;
 
   return (
     <Container style={{marginTop: "25px"}}>

@@ -44,7 +44,7 @@ const Home: React.FC = props => {
     let endDate = getYYYMMDD(new Date(currentRange?.[1]));
 
     if(startDate && endDate) {
-      fetchDateRangeData(startDate, endDate);
+      dispatch(fetchDateRangeData({startDate, endDate}));
     }
   }
 

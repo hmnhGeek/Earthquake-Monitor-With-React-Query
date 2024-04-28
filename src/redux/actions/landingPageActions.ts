@@ -18,16 +18,13 @@ export const fetchLast24HrsData = createAsyncThunk(
         let response = await api.get(`/fdsnws/event/1/query?format=geojson&starttime=${yesterdayFormatted}&endtime=${todayFormatted}`);
         return response.data;
     }
-)
+);
 
-export const fetchDateRangeData = (startDate: string, endDate: string) => {
-    return async (dispatch: Dispatch) => {
-        try {
-            dispatch(fetchDateRangeDataStart());
-            const response = await api.get(`/fdsnws/event/1/query?format=geojson&starttime=${startDate}&endtime=${endDate}`);
-            dispatch(fetchDateRangeDataSuccess(response.data));
-        } catch(error: any) {
-            dispatch(fetchDateRangeDataFailure());
-        }
+export const fetchDateRangeData = createAsyncThunk(
+    "earthquake/fetchDateRangeData",
+    async ({startDate, endDate}: {startDate: string, endDate: string}) => {
+        // let {startDate, endDate} = payload;
+        const response = await api.get(`/fdsnws/event/1/query?format=geojson&starttime=${startDate}&endtime=${endDate}`);
+        return response.data;
     }
-}
+);

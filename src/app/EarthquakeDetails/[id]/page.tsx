@@ -1,7 +1,6 @@
 'use client';
 
-import { AppDispatch, RootState } from "@/redux/store";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Header, Message, MessageHeader } from "semantic-ui-react";
@@ -14,21 +13,19 @@ import {
     Table,
   } from 'semantic-ui-react';
 import { fetchEqDetailsByEventId } from "@/redux/actions/detailsPageActions";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
-interface EarthquakeDetailsProps {
-    earthquakeData: any;
-    earthquakeDetailsData: any;
-    fetchEqDetailsByEventId: (eventId: string) => void;
-}
-
-const EarthquakeDetails: React.FC<EarthquakeDetailsProps> = (props) => {
+const EarthquakeDetails: React.FC = (props) => {
     const id = useParams()?.id;
-    const {earthquakeData, earthquakeDetailsData, fetchEqDetailsByEventId} = props;
     const [earthquakeDetails, setEarthquakeDetails] = useState<any>(null);
+
+    const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+    const {earthquakeDetailsData} = useSelector((state: any) => state.detailsPage);
+    const {earthquakeData} = useSelector((state: any) => state.landingPage);
 
     useEffect(() => {
         if(!earthquakeData && typeof id === "string" && id.trim() !== "") {
-            fetchEqDetailsByEventId(id);
+            dispatch(fetchEqDetailsByEventId({eventId: id}));
         }
         else {
             let extractedData = earthquakeData?.features?.filter((x: any) => x.id === id)?.[0];
@@ -157,17 +154,4 @@ const EarthquakeDetails: React.FC<EarthquakeDetailsProps> = (props) => {
     return null;
 }
 
-const mapStateToProps = (state: RootState) => {
-    return {
-        earthquakeData: state.landingPage.earthquakeData,
-        earthquakeDetailsData: state.detailsPage.earthquakeDetailsData,
-    };
-};
-
-const mapDispatchToProps = (dispatch: AppDispatch) => {
-    return {
-        fetchEqDetailsByEventId: (eventId: string) => dispatch(fetchEqDetailsByEventId(eventId)),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EarthquakeDetails);
+export default EarthquakeDetails;

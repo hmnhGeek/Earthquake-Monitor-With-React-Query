@@ -88,7 +88,7 @@ const Home: React.FC = props => {
               <SemanticDatepicker value={currentRange} onChange={onChangeDateRange} type="range" />
             </GridColumn>
             <GridColumn width={2}>
-              <Button onClick={startFetchProcess}>Search</Button>
+              <Button disabled={!dateRangeSelected} onClick={startFetchProcess}>Search</Button>
             </GridColumn>
           </GridRow>
         </Grid>

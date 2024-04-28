@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import landingPageReducer from './features/landingPageSlice';
-import detailsPageReducer from './reducers/detailsPageReducer';
+import detailsPageReducer from "./features/detailsPageSlice";
 
 const store = configureStore({
     reducer: {

@@ -14,7 +14,7 @@ import {
   TableBody,
   Table,
 } from 'semantic-ui-react';
-import { loadLast24HrsData, fetchDateRangeData } from "@/redux/actions/landingPageActions";
+import { fetchDateRangeData, fetchLast24HrsData } from "@/redux/actions/landingPageActions";
 import {
   StatisticValue,
   StatisticLabel,
@@ -26,7 +26,6 @@ import SemanticDatepicker from "react-semantic-ui-datepickers";
 import { getYYYMMDD } from "./utils/utils";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLast24HrsData } from "@/redux/features/landingPageSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 const Home: React.FC = props => {

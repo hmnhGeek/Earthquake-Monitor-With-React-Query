@@ -14,7 +14,6 @@ import {
   TableBody,
   Table,
 } from 'semantic-ui-react';
-import { AppDispatch, RootState } from "@/redux/store";
 import { loadLast24HrsData, fetchDateRangeData } from "@/redux/actions/landingPageActions";
 import {
   StatisticValue,
@@ -26,20 +25,16 @@ import { GridColumn, Grid, GridRow } from 'semantic-ui-react'
 import SemanticDatepicker from "react-semantic-ui-datepickers";
 import { getYYYMMDD } from "./utils/utils";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLast24HrsData } from "@/redux/features/landingPageSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
-interface HomeProps {
-  earthquakeData: any;
-  isLoading: boolean;
-  error: string | null;
-  loadLast24HrsData: () => void;
-  fetchDateRangeData: (startDate: string, endDate: string) => void;
-}
-
-const Home: React.FC<HomeProps> = props => {
-  const {earthquakeData, isLoading, error, loadLast24HrsData, fetchDateRangeData} = props;
+const Home: React.FC = props => {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const {earthquakeData, isLoading, error} = useSelector((state:any) => state.landingPage);
 
   useEffect(() => {
-    loadLast24HrsData();
+    dispatch(fetchLast24HrsData());
   }, []);
 
   const [currentRange, setNewRange] = useState<any[]>([]);
@@ -127,19 +122,4 @@ const Home: React.FC<HomeProps> = props => {
   );
 }
 
-const mapStateToProps = (state: RootState) => {
-  return {
-      earthquakeData: state.landingPage.earthquakeData,
-      isLoading: state.landingPage.isLoading,
-      error: state.landingPage.error
-  };
-};
-
-const mapDispatchToProps = (dispatch: AppDispatch) => {
-  return {
-    loadLast24HrsData: () => dispatch(loadLast24HrsData()),
-    fetchDateRangeData: (startDate: string, endDate: string) => dispatch(fetchDateRangeData(startDate, endDate)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

@@ -27,17 +27,27 @@ import { getYYYMMDD } from "./utils/utils";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import { setGlobalDateRange } from "@/redux/features/landingPageSlice";
 
 const Home: React.FC = props => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const {earthquakeData, isLoading, error} = useSelector((state:any) => state.landingPage);
+  const {earthquakeData, isLoading, error, currentRange, dateRangeSelected} = useSelector((state:any) => state.landingPage);
 
   useEffect(() => {
-    dispatch(fetchLast24HrsData());
+    if(!dateRangeSelected)
+      dispatch(fetchLast24HrsData());
+    else
+      startFetchProcess();
   }, []);
 
-  const [currentRange, setNewRange] = useState<any[]>([]);
-  const onChangeDateRange = (event: any, data: any) => setNewRange(data.value);
+  const onChangeDateRange = (event: any, data: any) => {
+    dispatch(setGlobalDateRange(data.value));
+
+    // if user clears the calendar, load the last 24 hrs data
+    if(data.value === null) {
+      dispatch(fetchLast24HrsData());
+    }
+  }
 
   const startFetchProcess = () => {
     let startDate = getYYYMMDD(new Date(currentRange?.[0]));
@@ -48,12 +58,12 @@ const Home: React.FC = props => {
     }
   }
 
-  // if(isLoading) return <Loader inverted content="loading" inline="centered" />;
+  if(isLoading) return <Loader inverted content="loading" inline="centered" />;
 
   return (
     <Container style={{marginTop: "25px"}}>
       <Header as='h2'>
-        {currentRange === null || (currentRange && currentRange.length === 0) ? "Earthquakes in last 24 hours" : `Earthquakes from ${getYYYMMDD(new Date(currentRange?.[0]))} to ${getYYYMMDD(new Date(currentRange?.[1]))}`}
+        {currentRange === null || (!dateRangeSelected) ? "Earthquakes in last 24 hours" : `Earthquakes from ${getYYYMMDD(new Date(currentRange?.[0]))} to ${getYYYMMDD(new Date(currentRange?.[1]))}`}
       </Header>
       <div>
         <Grid>
@@ -75,7 +85,7 @@ const Home: React.FC = props => {
               </StatisticGroup>
             </GridColumn>
             <GridColumn width={6}>
-              <SemanticDatepicker onChange={onChangeDateRange} type="range" />
+              <SemanticDatepicker value={currentRange} onChange={onChangeDateRange} type="range" />
             </GridColumn>
             <GridColumn width={2}>
               <Button onClick={startFetchProcess}>Search</Button>

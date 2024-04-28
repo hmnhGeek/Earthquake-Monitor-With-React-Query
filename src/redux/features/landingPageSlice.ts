@@ -5,7 +5,17 @@ import { fetchDateRangeData, fetchLast24HrsData } from "../actions/landingPageAc
 export const landingPageSlice = createSlice({
     name: "landingPage",
     initialState: landingPageInitialState,
-    reducers: {},
+    reducers: {
+        setGlobalDateRange: (state, action) => {
+            state.currentRange = action.payload;
+            if(action.payload && action.payload.length > 1) {
+                state.dateRangeSelected = true;
+            }
+            else {
+                state.dateRangeSelected = false;
+            }
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchLast24HrsData.pending, (state, action) => {
             state.isLoading = true;
@@ -38,4 +48,6 @@ export const landingPageSlice = createSlice({
     }
 });
 
+
+export const {setGlobalDateRange} = landingPageSlice.actions;
 export default landingPageSlice.reducer;

@@ -1,6 +1,4 @@
 import api from "@/app/api/api";
-import { Dispatch } from 'redux';
-import { fetchDateRangeDataFailure, fetchDateRangeDataStart, fetchDateRangeDataSuccess, loadLast24HrsDataFailure, loadLast24HrsDataStart, loadLast24HrsDataSuccess } from "../actionCreators/landingPageActionCreators";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchLast24HrsData = createAsyncThunk(
